@@ -1,0 +1,57 @@
+#%RAML 1.0
+version: v1
+baseUri: https://mocksvc.mulesoft.com/mocks/758a9ebc-2852-41d1-8650-61082b16b198 # 
+title: Employee Management system
+
+types:
+ employeeData: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employee-record-data-type/1.0.3/employee-record-data-type.raml
+
+/employees:
+  get:
+    queryParameters: 
+      deptName:
+        required: false
+        enum: [HR,TECHNOLOGY,OS,ADMIN]
+      salary:
+          required: false
+    responses: 
+      200:
+        body:
+          application/json:
+            type: employeeData[]
+            example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeerecordexample/1.0.0/employeerecordexample.raml
+
+/employee:
+  post:
+    body: 
+      application/json:
+        type: employeeData
+        example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.2/employeepostbodyexample.raml
+    responses: 
+      201:
+        body: 
+          application/json:
+            example: !include employeeAddedResponse.raml
+
+
+  /{ID}:
+    put:
+      body: 
+        application/json:
+          type: employeeData
+          example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.2/employeepostbodyexample.raml
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: employeeData
+              
+    delete:
+      responses: 
+        200:
+          body: 
+            application/json:
+              example:
+                message: Employee deleted 
+    
+         
