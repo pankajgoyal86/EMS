@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
     <flow name="ems-main">
         <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="ems-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
         <apikit:router xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" config-ref="ems-config" doc:name="APIkit Router"/>
-        <exception-strategy ref="ems-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+        <exception-strategy ref="ems-api-exceptionMapping_Exception_Strategy" doc:name="Reference Exception Strategy"/>
     </flow>
     <flow name="ems-console">
         <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="ems-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
@@ -30,31 +30,5 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
         <flow-ref name="ems-create-employee" doc:name="ems-create-employee"/>
 
     </flow>
-    <apikit:mapping-exception-strategy xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" name="ems-apiKitGlobalExceptionMapping">
-        <apikit:mapping statusCode="404">
-            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
-            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="405">
-            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
-            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="415">
-            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
-            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="406">
-            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
-            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
-        </apikit:mapping>
-        <apikit:mapping statusCode="400">
-            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
-            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
-            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
-        </apikit:mapping>
-    </apikit:mapping-exception-strategy>
+    
 </mule>
