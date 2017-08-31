@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+    <spring:beans>
+        <spring:bean id="derbydb" name="derbydb" class="org.enhydra.jdbc.standard.StandardDataSource">
+            <spring:property name="driverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <spring:property name="url" value="jdbc:derby:emsdev"/>
+        </spring:bean>
+          <spring:bean id="dbinitialization" name="dbinit" class="org.sapient.ems.DBInitialization" scope="singleton" />
+    </spring:beans>
+    <db:derby-config name="Derby_Configuration" url="jdbc:derby:emsdev;create=true" doc:name="Derby Configuration"/>
     <sub-flow name="ems-create-employee">
-        <set-payload value="create an employee" doc:name="Set Payload"/>
+        <db:insert config-ref="Derby_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[insert into  EMP (employeeId, employeeName, deptName, salary) values ('employeeId', 'employeeName', 'deptName', 3000)]]></db:parameterized-query>
+        </db:insert>
+        <logger message="'Employee created Successfully'" level="INFO" doc:name="Logger"/>
+
     </sub-flow>
 </mule>
