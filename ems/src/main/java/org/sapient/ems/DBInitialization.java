@@ -23,10 +23,10 @@ public class DBInitialization {
                         ResultSet check = dbm.getTables(null,null,tables[i],null);
                         if (check.next()) {
                               stmt.executeUpdate("DROP TABLE "+ tables[i]);
-                              stmt.executeUpdate("CREATE TABLE "+ tables[i] +" ( employeeId VARCHAR(255), employeeName VARCHAR(255), deptName VARCHAR(255), salary INTEGER)");
+                              stmt.executeUpdate("CREATE TABLE "+ tables[i] +" ( employeeId INTEGER, employeeName VARCHAR(255), deptName VARCHAR(255), salary INTEGER)");
                               }
                         else  {    
-                              stmt.executeUpdate("CREATE TABLE "+ tables[i] +" ( employeeId VARCHAR(255), employeeName VARCHAR(255), deptName VARCHAR(255), salary INTEGER)");
+                              stmt.executeUpdate("CREATE TABLE "+ tables[i] +" ( employeeId INTEGER, employeeName VARCHAR(255), deptName VARCHAR(255), salary INTEGER)");
                         }
                   }
             } catch (java.sql.SQLException sqle) {
