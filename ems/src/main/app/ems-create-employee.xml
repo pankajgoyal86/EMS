@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd">
     <spring:beans>
         <spring:bean id="derbydb" name="derbydb" class="org.enhydra.jdbc.standard.StandardDataSource">
             <spring:property name="driverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
@@ -15,10 +17,13 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
     </spring:beans>
     <db:derby-config name="Derby_Configuration" url="jdbc:derby:emsdev;create=true" doc:name="Derby Configuration"/>
     <sub-flow name="ems-create-employee">
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object" metadata:id="5c5f2b5c-7404-46ad-8da5-a0c1c6abb631"></json:json-to-object-transformer>
         <db:insert config-ref="Derby_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[insert into  EMP (employeeId, employeeName, deptName, salary) values ('employeeId', 'employeeName', 'deptName', 3000)]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[insert into  EMP (employeeId, employeeName, deptName, salary) values (#[payload.employeeId], #[payload.employeeName], #[payload.deptName], #[payload.salary])]]></db:parameterized-query>
         </db:insert>
-        <logger message="'Employee created Successfully'" level="INFO" doc:name="Logger"/>
+        <set-payload value="{ 'message': 'Employee created successfully' }
+" doc:name="Set Payload"/>
 
     </sub-flow>
+
 </mule>

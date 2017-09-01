@@ -7,10 +7,12 @@
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
-    <flow name="ems-get-employees">
-        <db:select config-ref="Derby_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[select * from EMP]]></db:parameterized-query>
+    <sub-flow name="ems-get-employees">
+        <expression-component doc:name="Expression"><![CDATA[flowVars.whereSalary=(message.inboundProperties['http.query.params'].salary ==empty) ?"" : "AND salary >= " +message.inboundProperties['http.query.params'].salary +" order by salary desc";
+flowVars.whereDepartment=(message.inboundProperties['http.query.params'].deptName == empty) ?"" : "AND deptName = '" +message.inboundProperties['http.query.params'].deptName + "' order by employeeId desc";]]></expression-component>
+        <db:select config-ref="Derby_Configuration" doc:name="get employees based on salary">
+            <db:dynamic-query><![CDATA[select * from EMP where 1=1 #[flowVars.whereSalary] #[flowVars.whereDepartment]]]></db:dynamic-query>
         </db:select>
-    </flow>
+    </sub-flow>
 
 </mule>
