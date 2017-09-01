@@ -3,7 +3,7 @@
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
-    <http:listener-config xmlns:http="http://www.mulesoft.org/schema/mule/http" name="ems-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+
     <apikit:config xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" name="ems-config" raml="ems.raml" consoleEnabled="false" doc:name="Router"/>
     <flow name="ems-main">
         <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="EMS_HTTP_Listener_Configuration" path="${http.contextPath}" doc:name="HTTP"/>
@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
         <exception-strategy ref="ems-api-exceptionMapping_Exception_Strategy" doc:name="Reference Exception Strategy"/>
     </flow>
     <flow name="ems-console">
-        <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="ems-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <http:listener xmlns:http="http://www.mulesoft.org/schema/mule/http" config-ref="EMS_HTTP_Listener_Configuration" path="/console/*" doc:name="HTTP"/>
         <apikit:console xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" config-ref="ems-config" doc:name="APIkit Console"/>
     </flow>
     <flow name="put:/employee/{ID}:application/json:ems-config">

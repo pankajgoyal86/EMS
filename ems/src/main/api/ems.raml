@@ -1,19 +1,31 @@
 #%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/444fa1e2-2ed5-4d0e-b018-d926dcec7366/api/ # baseUri: https://mocksvc.mulesoft.com/mocks/444fa1e2-2ed5-4d0e-b018-d926dcec7366/api/ #
 version: v1
-baseUri: https://mocksvc.mulesoft.com/mocks/758a9ebc-2852-41d1-8650-61082b16b198 # 
+securitySchemes:
+    basic:
+        description: |
+          This API supports Basic Authentication.
+        type: Basic Authentication
 title: Employee Management system
+
+
+
 
 types:
  employeeData: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employee-record-data-type/1.0.3/employee-record-data-type.raml
 
 /employees:
+  description: create and get employees record 
   get:
     queryParameters: 
       deptName:
         required: false
         enum: [HR,TECHNOLOGY,OS,ADMIN]
+        description: all dept should have permissions to get data
       salary:
           required: false
+      size:
+        required: false
     responses: 
       200:
         body:
@@ -21,31 +33,31 @@ types:
             type: employeeData[]
             example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeerecordexample/1.0.0/employeerecordexample.raml
 
-/employee:
   post:
+    securedBy: basic
     body: 
       application/json:
-        type: employeeData
-        example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.2/employeepostbodyexample.raml
+        type: employeeData[]
+        example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeerecordexample/1.0.0/employeerecordexample.raml
     responses: 
       201:
         body: 
           application/json:
-            example: !include employeeAddedResponse.raml
-
-
+            example:
+              message: Employee Created
   /{ID}:
+    description: update and delete an employee record
     put:
       body: 
         application/json:
           type: employeeData
-          example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.2/employeepostbodyexample.raml
+          example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.5/employeebodyexample.raml
       responses: 
         200:
           body: 
             application/json:
-              type: employeeData
-              
+              example:
+                meesage: Employee updated         
     delete:
       responses: 
         200:
