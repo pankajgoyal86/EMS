@@ -17,12 +17,14 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
     </spring:beans>
     <db:derby-config name="Derby_Configuration" url="jdbc:derby:emsdev;create=true" doc:name="Derby Configuration"/>
     <sub-flow name="ems-create-employee">
-        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object" metadata:id="5c5f2b5c-7404-46ad-8da5-a0c1c6abb631"></json:json-to-object-transformer>
-        <db:insert config-ref="Derby_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[insert into  EMP (employeeId, employeeName, deptName, salary) values (#[payload.employeeId], #[payload.employeeName], #[payload.deptName], #[payload.salary])]]></db:parameterized-query>
-        </db:insert>
-        <set-payload value="{ 'message': 'Employee created successfully' }
-" doc:name="Set Payload"/>
+        <json:json-to-object-transformer returnClass="java.util.List" doc:name="JSON to Object" metadata:id="5c5f2b5c-7404-46ad-8da5-a0c1c6abb631"></json:json-to-object-transformer>
+        <foreach collection="#[message.payload]" doc:name="For Each">
+            <db:insert config-ref="Derby_Configuration" doc:name="Database">
+                <db:parameterized-query><![CDATA[insert into  EMP (employeeId, employeeName, deptName, salary) values (#[payload.employeeId], #[payload.employeeName], #[payload.deptName], #[payload.salary])]]></db:parameterized-query>
+            </db:insert>
+        </foreach>
+
+        <set-payload value="{ &quot;message&quot;: &quot;Employee created successfully'&quot;} " doc:name="Set Payload"/>
 
     </sub-flow>
 

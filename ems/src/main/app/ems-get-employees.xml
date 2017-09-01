@@ -8,10 +8,14 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <sub-flow name="ems-get-employees">
-        <expression-component doc:name="Expression"><![CDATA[flowVars.whereSalary=(message.inboundProperties['http.query.params'].salary ==empty) ?"" : "AND salary >= " +message.inboundProperties['http.query.params'].salary +" order by salary desc";
-flowVars.whereDepartment=(message.inboundProperties['http.query.params'].deptName == empty) ?"" : "AND deptName = '" +message.inboundProperties['http.query.params'].deptName + "' order by employeeId desc";]]></expression-component>
-        <db:select config-ref="Derby_Configuration" doc:name="get employees based on salary">
-            <db:dynamic-query><![CDATA[select * from EMP where 1=1 #[flowVars.whereSalary] #[flowVars.whereDepartment]]]></db:dynamic-query>
+        <expression-component doc:name="Expression"><![CDATA[flowVars.whereSalary=(message.inboundProperties['http.query.params'].salary ==empty) ?"" : "AND salary >= " +message.inboundProperties['http.query.params'].salary + " 'order by salary desc";
+flowVars.whereDepartment=(message.inboundProperties['http.query.params'].deptName == empty) ?"" : "AND deptName = '" +message.inboundProperties['http.query.params'].deptName + "' order by employeeId desc";
+flowVars.whereSize=(message.inboundProperties['http.query.params'].size==empty)? "": "  FETCH  "+ message.inboundProperties['http.query.params'].size  +" ROWS ONLY order by employeeId desc" ;
+]]></expression-component>
+        <logger message="select * from EMP where 1=1 #[flowVars.whereSalary] #[flowVars.whereDepartment] #[flowVars.whereSize]" level="INFO" doc:name="Logger"/>
+        <db:select config-ref="Derby_Configuration" doc:name="get employees based on filters">
+            <db:dynamic-query><![CDATA[select * from EMP #[flowVars.whereSalary] #[flowVars.whereDepartment] #[flowVars.whereSize]]]></db:dynamic-query>
+
         </db:select>
     </sub-flow>
 

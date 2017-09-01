@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
         <db:update config-ref="Derby_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[update EMP set employeeName = #[payload.employeeName],  deptName = #[payload.deptName], salary = #[payload.salary] where employeeId = #[message.inboundProperties.'http.uri.params'.get("ID")]]]></db:parameterized-query>
         </db:update>
-        <set-payload value="{'message'='employee details updated successfully'" doc:name="Set Payload"/>
+        <set-payload value="{&quot;message&quot;:&quot;employee details updated successfully&quot;}" doc:name="Set Payload"/>
 
     </sub-flow>
 </mule>

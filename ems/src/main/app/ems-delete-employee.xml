@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
         <db:delete config-ref="Derby_Configuration" doc:name="Database">
             <db:parameterized-query><![CDATA[delete from EMP where employeeId = #[message.inboundProperties.'http.uri.params'.get("ID")]]]></db:parameterized-query>
         </db:delete>
-        <set-payload value="{'message: 'Employee deleted successfully'}
+        <set-payload value="{&quot;message&quot;: &quot;Employee deleted successfully&quot;} 
 " doc:name="Set Payload"/>
 
     </sub-flow>
