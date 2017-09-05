@@ -1,69 +1,148 @@
 #%RAML 1.0
-baseUri: https://mocksvc.mulesoft.com/mocks/444fa1e2-2ed5-4d0e-b018-d926dcec7366/api/ # baseUri: https://mocksvc.mulesoft.com/mocks/444fa1e2-2ed5-4d0e-b018-d926dcec7366/api/ #
+baseUri: https://mocksvc.mulesoft.com/mocks/01283ea4-f4ca-4826-b931-8a833dfccaa5 # 
 version: v1
-securitySchemes:
-    basic:
-        description: |
-          This API supports Basic Authentication.
-        type: Basic Authentication
-title: Employee Management system
+title: Employee Management System
 
+securitySchemes: 
+  oauth_2_0:
+    description: |
+      EMS supports OAuth 2.0 for authenticating all API requests.
+    type: OAuth 2.0
+    describedBy:
+      headers:
+        Authorization:
+          description: |
+            Used to send a valid OAuth 2 access token. Do not use 
+            with the "access_token" query string parameter.
+          type: string
+      queryParameters: 
+        acess_token:
+          description: |
+            Used to send a valid OAuth 2 access token. Do not use together with 
+            the "Authorization" header
+            type: string
+      responses: 
+        401:
+          description: |
+            Bad or expired token. This can happen if the user
+            revoked or expired an access token. To fix, you should re-
+            authenticate the user.
+        403:
+          description: |
+            Bad OAuth request (wrong consumer key, bad nonce, expired
+            timestamp...). Unfortunately, re-authenticating the user won't help here.
+    settings: 
+      authorizationGrants: [authorization_code, password, client_credentials, implicit]
+      accessTokenUri: https://oauth2provider.cloudhub.io/access_token
+      authorizationUri: https://oauth2provider.cloudhub.io/authorize
+  
+    
+resourceTypes: 
+  collection: 
+    description: Collection of available <<resourcePathName>> in EMS
+    get:
+      description: Get a list of all the <<resourcePathName>>
+      responses: 
+        200:
+          body: 
+            application/json:
 
+    post:
+      description: |
+        create an <<resourcePathName|!singularize>> record into EMS.
+      body: 
+        application/json:
+          example: |
+            example: |
+                                  {
+                                    "employeeId": 1,
+                                    "employeeName": "Pankaj",
+                                    "deptName": "Technology",
+                                    "salary": 10000
+                                  }
+  collecton-item:
+    description: Entity representing a <<resourcePathName|!singularize>>
+    get:
+      description: 
+        Get the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+         {<<resourcePathName|!singularize>>Id}
+      responses: 
+        200:
+          body: 
+            application/json:
 
-
-types:
- employeeData: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employee-record-data-type/1.0.3/employee-record-data-type.raml
-
-/employees:
-  description: create and get employees record 
-  get:
+        400:
+          body: 
+            application/json:
+              example: |
+                {"message":"<<resourcePathName|!singularize not found>>"}
+traits:
+  searchable:
     queryParameters: 
       deptName:
+        description: |
+          JSON array [{"field1", "value1" , "operator1"},{"field2","value2","operator2"},....,{"fieldN","valueN","operatorN"}] |
+          <<description>>
+        example: |
+          <<example>>
+  orderable:
+    queryParameters: 
+      orderBy:
+        description: |
+          Order by field: <<fieldsList>>
+        type: integer
         required: false
-        enum: [HR,TECHNOLOGY,OS,ADMIN]
-        description: all dept should have permissions to get data
-      salary:
-          required: false
-      size:
+      order: 
+        description: Order
+        enum: [desc,asc]
+        default: asc
         required: false
+  pageable:
+    queryParameters: 
+      offset:
+        description: Skip over a number of elements by specifying an offset value for the query
+        type: integer
+        required: false
+        example: 20
+        default: 0
+      limit:
+        description: Limit the number of elements on the response
+        type: integer
+        required: false
+        example: 80
+        default: 10
+
+/employees:
+  type: collection
+  get:
+    is: [
+          searchable: {description: "with searchable fields: deptName" , example: "['deptName','=', 'HR']"},
+          orderable: {"fieldsList": "salary"},
+          pageable
+        ]
     responses: 
       200:
-        body:
+        body: 
           application/json:
-            type: employeeData[]
-            example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeerecordexample/1.0.0/employeerecordexample.raml
-
+            example: |
+              [
+                                  {
+                                    "employeeId": 1,
+                                    "employeeName": "Pankaj",
+                                    "deptName": "Technology",
+                                    "salary": 10000
+                                  },
+                                  {
+                                    "employeeId": 2,
+                                    "employeeName": "KC",
+                                    "deptName": "HR",
+                                    "salary": 5000
+                                  }
+                                ]
   post:
-    securedBy: basic
-    body: 
-      application/json:
-        type: employeeData[]
-        example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeerecordexample/1.0.0/employeerecordexample.raml
     responses: 
       201:
         body: 
           application/json:
-            example:
-              message: Employee Created
-  /{ID}:
-    description: update and delete an employee record
-    put:
-      body: 
-        application/json:
-          type: employeeData
-          example: !include exchange_modules/106aedf4-361e-425f-8f66-6426328ccc3d/employeepostbodyexample/1.0.5/employeebodyexample.raml
-      responses: 
-        200:
-          body: 
-            application/json:
-              example:
-                meesage: Employee updated         
-    delete:
-      responses: 
-        200:
-          body: 
-            application/json:
-              example:
-                message: Employee deleted 
-    
-         
+            example: |
+              {"message":"Employee created"}

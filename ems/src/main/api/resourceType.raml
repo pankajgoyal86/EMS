@@ -1,0 +1,38 @@
+#%RAML 1.0 ResourceType 
+
+EMP: 
+  collection: 
+    description: Collection of available <<resourcePathName>> in EMS
+    get:
+      description: Get a list of all the <<resourcePathName>>
+      responses: 
+        200:
+          body: 
+            application/json:
+    post:
+      description: |
+        create an <<resourcePathName|!singularize>> record into EMS.
+      body: 
+        application/json:
+      responses: 
+        201:
+          body: 
+            application/json:
+              example: |
+                {"message": "Employee created"} 
+  collecton-item:
+    description: Entity representing a <<resourcePathName|!singularize>>
+    get:
+      description: 
+        Get the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+         {<<resourcePathName|!singularize>>Id}
+      responses: 
+        200:
+          body: 
+            application/json:
+
+        400:
+          body: 
+            application/json:
+              example: |
+                {"message":"<<resourcePathName|!singularize not found>>"}
