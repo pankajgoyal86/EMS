@@ -1,9 +1,9 @@
-#%RAML 1.0 Trait
-
-traits:
+ 
+  
   searchable:
     queryParameters: 
       query:
+        required: false
         description: |
           JSON array [{"field1", "value1" , "operator1"},{"field2","value2","operator2"},....,{"fieldN","valueN","operatorN"}] |
           <<description>>
@@ -14,7 +14,8 @@ traits:
       orderBy:
         description: |
           Order by field: <<fieldsList>>
-        type: integer
+        type: string
+        enum: [salary,deptName]
         required: false
       order: 
         description: Order
