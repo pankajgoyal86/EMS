@@ -9,14 +9,23 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
     <sub-flow name="ems-get-employees">
-        <expression-component doc:name="Expression"><![CDATA[flowVars.wherePaged="order by EMPLOYEEID"+ ((message.inboundProperties['http.query.params'].offset==empty)? "": " OFFSET "+ message.inboundProperties['http.query.params'].offset  +" ROWS ") +
-((message.inboundProperties['http.query.params'].limit==empty)? "": " FETCH NEXT "+ message.inboundProperties['http.query.params'].limit)  +
- " ROWS ONLY " ;
+        <expression-component doc:name="Expression"><![CDATA[flowVars.Id=((message.inboundProperties['http.uri.params'].Id==empty)? "Where 1=1": "Where EMPLOYEEID="+message.inboundProperties['http.uri.params'].Id) ;
+
+flowVars.whereSalary=((message.inboundProperties['http.query.params'].salary ==empty) ?"" : "AND salary >= " +message.inboundProperties['http.query.params'].salary);
+flowVars.whereDepartment=((message.inboundProperties['http.query.params'].deptName == empty) ?"" : "AND deptName = '" +message.inboundProperties['http.query.params'].deptName+"'") ;
+
+flowVars.SortBy=((message.inboundProperties['http.query.params'].orderBy==empty)? "order by EMPLOYEEID":" order by "+ message.inboundProperties['http.query.params'].orderBy) ;
+flowVars.order=((message.inboundProperties['http.query.params'].order==empty)? "": message.inboundProperties['http.query.params'].order) ;
+
+flowVars.wherePaged=((message.inboundProperties['http.query.params'].offset==empty)? "": " OFFSET "+ message.inboundProperties['http.query.params'].offset  +" ROWS ") +
+((message.inboundProperties['http.query.params'].limit==empty)? "": " FETCH NEXT "+ message.inboundProperties['http.query.params'].limit  +
+ " ROWS ONLY " );
 ]]></expression-component>
-        <set-variable variableName="sortedBy" value="#[message.inboundProperties.'http.query.params'.orderBy]" doc:name="Variable"/>
-        <logger message="#[flowVars.wherePaged]" level="INFO" doc:name="Logger"/>
+
+        <logger message="select * from EMP #[flowVars.Id] #[flowVars.whereSalary] #[flowVars.whereDepartment]  #[flowVars.SortBy] #[flowVars.order] #[flowVars.wherePaged]" level="INFO" doc:name="Logger"/>
         <db:select config-ref="Derby_Configuration" doc:name="get employees based on filters">
-            <db:dynamic-query><![CDATA[select * from EMP #[flowVars.wherePaged]]]></db:dynamic-query>
+            <db:dynamic-query><![CDATA[select * from EMP #[flowVars.Id] #[flowVars.whereSalary] #[flowVars.whereDepartment] #[flowVars.SortBy] #[flowVars.order] #[flowVars.wherePaged]]]></db:dynamic-query>
+
 
 
         </db:select>
@@ -28,7 +37,7 @@ http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee
 %type currency = :number { format: "##.##"}
 %var sortedBy = flowVars.sortedBy
 
-//%var deptName = (inboundProperties['http.query.params'].deptName==empty)? "": inboundProperties['http.query.params'].deptName
+
 ---
 
 payload map ((payload01 , indexOfPayload01) -> {
@@ -36,7 +45,7 @@ payload map ((payload01 , indexOfPayload01) -> {
 	employeeName: payload01.EMPLOYEENAME,
 	deptName:payload01.DEPTNAME,
 	salary:payload01.SALARY as :currency
-}) filter $.salary > 5000 and $.deptName=="HR" orderBy sortedBy ]]></dw:set-payload>
+}) ]]></dw:set-payload>
         </dw:transform-message>
     </sub-flow>
 

@@ -8,7 +8,8 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <sub-flow name="ems-delete-employee">
         <db:delete config-ref="Derby_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[delete from EMP where employeeId = #[message.inboundProperties.'http.uri.params'.get("ID")]]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[delete from EMP where employeeId = #[message.inboundProperties.'http.uri.params'.get("Id")]]]></db:parameterized-query>
+
         </db:delete>
         <set-payload value="{&quot;message&quot;: &quot;Employee deleted successfully&quot;} 
 " doc:name="Set Payload"/>

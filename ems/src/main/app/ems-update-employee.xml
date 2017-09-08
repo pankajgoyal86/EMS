@@ -10,7 +10,8 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
     <sub-flow name="ems-update-employee">
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
         <db:update config-ref="Derby_Configuration" doc:name="Database">
-            <db:parameterized-query><![CDATA[update EMP set employeeName = #[payload.employeeName],  deptName = #[payload.deptName], salary = #[payload.salary] where employeeId = #[message.inboundProperties.'http.uri.params'.get("ID")]]]></db:parameterized-query>
+            <db:parameterized-query><![CDATA[update EMP set employeeName = #[payload.employeeName],  deptName = #[payload.deptName], salary = #[payload.salary] where employeeId = #[message.inboundProperties.'http.uri.params'.get("Id")]]]></db:parameterized-query>
+
         </db:update>
         <set-payload value="{&quot;message&quot;:&quot;employee details updated successfully&quot;}" doc:name="Set Payload"/>
 
