@@ -13,14 +13,22 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
         <http:listener config-ref="EMS_HTTP_Listener_Configuration" path="/console/*" doc:name="HTTP"/>
         <apikit:console config-ref="ems-config" doc:name="APIkit Console"/>
     </flow>
+    <flow name="put:/employees/{Id}:ems-config">
+        <set-payload value="{ &quot;message&quot;: &quot;The employee has been updated.&quot; }" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/employees/{Id}:ems-config">
+        <set-payload value="{ &quot;message&quot;: &quot;The employee has been deleted.&quot; }" doc:name="Set Payload"/>
+    </flow>
     <flow name="get:/employees:ems-config">
-        <flow-ref name="ems-get-employees" doc:name="ems-get-employees"/>
-
+        <set-payload value="[&#xA;                  {&#xA;                    &quot;employeeId&quot;: 1,&#xA;                    &quot;employeeName&quot;: &quot;Pankaj&quot;,&#xA;                    &quot;deptName&quot;: &quot;Technology&quot;,&#xA;                    &quot;salary&quot;: 10000&#xA;                  },&#xA;                  {&#xA;                    &quot;employeeId&quot;: 2,&#xA;                    &quot;employeeName&quot;: &quot;KC&quot;,&#xA;                    &quot;deptName&quot;: &quot;HR&quot;,&#xA;                    &quot;salary&quot;: 5000&#xA;                  }&#xA;                ]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/employees/{Id}:ems-config">
+        <set-payload value="{&#xA;      &quot;employeeId&quot;: 1,&#xA;      &quot;employeeName&quot;: &quot;Pankaj&quot;,&#xA;      &quot;deptName&quot;: &quot;Technology&quot;,&#xA;      &quot;salary&quot;: 10000&#xA;}" doc:name="Set Payload"/>
     </flow>
     <flow name="post:/employees:ems-config">
-        <flow-ref name="ems-create-employee" doc:name="Flow Reference"/>
+        <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+        <set-payload value="{ &quot;message&quot;: &quot;The employee has been properly entered&quot; }" doc:name="Set Payload"/>
     </flow>
-
     <apikit:mapping-exception-strategy name="ems-apiKitGlobalExceptionMapping">
         <apikit:mapping statusCode="404">
             <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />

@@ -16,9 +16,25 @@ types:
       exampleBody: !include employee.sample
   get:
     is: [
-         searchable: {description: "with searchable fields: deptName", example: "['deptName','HR', 'equals']"},  
           orderable: {fieldsList: "salary"},
           pageable
         ]
-    
+    queryParameters: 
+      deptName:
+        required: false
+        description: Employees who are working with this department
+        enum: [HR,Technology,OS,ADMIN]
+      salary:
+        required: false
+        description: employee searchable with this salary
   post:
+
+  /{Id}:  
+    type: 
+      collecton-item: 
+        examplePutBody: !include employeePut.sample
+    get:   
+    put:    
+    delete:
+      
+    

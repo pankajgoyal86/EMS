@@ -1,3 +1,4 @@
+
   collection: 
     description: Collection of available <<resourcePathName>> in EMS
     get:
@@ -44,10 +45,36 @@
       responses: 
         200:
           body: 
-            application/json:
-
-        400:
+            application/json: 
+              example: |
+                {
+                      "employeeId": 1,
+                      "employeeName": "Pankaj",
+                      "deptName": "Technology",
+                      "salary": 10000
+                }
+    put:
+      description: 
+        Update the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+          {<<resourcePathName|!singularize>>Id}
+      body: 
+        application/json:
+          example: |
+              <<examplePutBody>>
+      responses: 
+        200:
           body: 
             application/json:
               example: |
-                {"message":"<<resourcePathName|!singularize not found>>"}
+                { "message": "The <<resourcePathName|!singularize>> has been updated." }             
+    delete:
+      description: 
+        delete the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+          {<<resourcePathName|!singularize>>Id}
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+                { "message": "The <<resourcePathName|!singularize>> has been deleted." }             
+

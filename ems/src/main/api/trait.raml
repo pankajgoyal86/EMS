@@ -1,9 +1,7 @@
- 
-  
+
   searchable:
     queryParameters: 
-      query:
-        required: false
+       query:
         description: |
           JSON array [{"field1", "value1" , "operator1"},{"field2","value2","operator2"},....,{"fieldN","valueN","operatorN"}] |
           <<description>>
@@ -36,3 +34,11 @@
         required: false
         example: 80
         default: 10
+  hasNotFound:
+    responses: 
+      404:
+        body: 
+          application/json:
+              example: |
+                {"message":"<<resourcePathName|!singularize not found>>"}
+    

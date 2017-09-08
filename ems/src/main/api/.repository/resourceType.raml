@@ -1,6 +1,4 @@
-#%RAML 1.0 ResourceType 
 
-EMP: 
   collection: 
     description: Collection of available <<resourcePathName>> in EMS
     get:
@@ -9,17 +7,35 @@ EMP:
         200:
           body: 
             application/json:
+              example: |
+                [
+                                  {
+                                    "employeeId": 1,
+                                    "employeeName": "Pankaj",
+                                    "deptName": "Technology",
+                                    "salary": 10000
+                                  },
+                                  {
+                                    "employeeId": 2,
+                                    "employeeName": "KC",
+                                    "deptName": "HR",
+                                    "salary": 5000
+                                  }
+                                ]
+
     post:
       description: |
         create an <<resourcePathName|!singularize>> record into EMS.
       body: 
         application/json:
+          example: |
+              <<exampleBody>>
       responses: 
         201:
           body: 
             application/json:
               example: |
-                {"message": "Employee created"} 
+                { "message": "The <<resourcePathName|!singularize>> has been properly entered" }             
   collecton-item:
     description: Entity representing a <<resourcePathName|!singularize>>
     get:
@@ -29,10 +45,36 @@ EMP:
       responses: 
         200:
           body: 
-            application/json:
-
-        400:
+            application/json: 
+              example: |
+                {
+                      "employeeId": 1,
+                      "employeeName": "Pankaj",
+                      "deptName": "Technology",
+                      "salary": 10000
+                }
+    put:
+      description: 
+        Update the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+          {<<resourcePathName|!singularize>>Id}
+      body: 
+        application/json:
+          example: |
+              <<examplePutBody>>
+      responses: 
+        200:
           body: 
             application/json:
               example: |
-                {"message":"<<resourcePathName|!singularize not found>>"}
+                { "message": "The <<resourcePathName|!singularize>> has been updated." }             
+    delete:
+      description: 
+        delete the <<resourcePathName|!singularize>> with <<resourcePathName|!singularize>>Id |
+          {<<resourcePathName|!singularize>>Id}
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: |
+                { "message": "The <<resourcePathName|!singularize>> has been deleted." }             
+

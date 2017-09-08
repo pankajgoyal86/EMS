@@ -1,9 +1,7 @@
-#%RAML 1.0 Trait
 
-traits:
   searchable:
     queryParameters: 
-      query:
+       query:
         description: |
           JSON array [{"field1", "value1" , "operator1"},{"field2","value2","operator2"},....,{"fieldN","valueN","operatorN"}] |
           <<description>>
@@ -14,7 +12,8 @@ traits:
       orderBy:
         description: |
           Order by field: <<fieldsList>>
-        type: integer
+        type: string
+        enum: [salary,deptName]
         required: false
       order: 
         description: Order
@@ -35,3 +34,11 @@ traits:
         required: false
         example: 80
         default: 10
+  hasNotFound:
+    responses: 
+      404:
+        body: 
+          application/json:
+              example: |
+                {"message":"<<resourcePathName|!singularize not found>>"}
+    
