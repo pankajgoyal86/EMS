@@ -2,13 +2,16 @@
 baseUri: https://mocksvc.mulesoft.com/mocks/01283ea4-f4ca-4826-b931-8a833dfccaa5 # 
 version: v1
 title: Employee Management System
-   
+
+securedBy: [oauth_2_0]   
 resourceTypes: !include resourceType.raml
 traits: !include trait.raml
 securitySchemes: 
   oauth_2_0: !include securityScheme.raml
 types: 
   employee: !include schemas.raml
+  
+  
   
 /employees:
   type: 
@@ -28,12 +31,12 @@ types:
         required: false
         description: employee searchable with this salary
   post:
-
+    securedBy: [oauth_2_0]
   /{Id}:  
     type: 
       collecton-item: 
         examplePutBody: !include employeePut.sample
-    get:   
+    get:
     put:    
     delete:
       

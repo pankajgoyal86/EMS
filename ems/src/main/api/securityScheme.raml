@@ -26,7 +26,7 @@
               Bad OAuth request (wrong consumer key, bad nonce, expired
               timestamp...). Unfortunately, re-authenticating the user won't help here.
     settings:
-      authorizationUri: https://www.dropbox.com/1/oauth2/authorize
-      accessTokenUri: https://api.dropbox.com/1/oauth2/token
+      authorizationUri: https://external-oauth-provider.cloudhub.io/external/authorize
+      accessTokenUri: https://external-oauth-provider.cloudhub.io/external/access_token
       authorizationGrants: [ implicit, client_credentials, password, authorization_code]
       
