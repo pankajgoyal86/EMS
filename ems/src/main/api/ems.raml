@@ -39,5 +39,18 @@ types:
     get:
     put:    
     delete:
+  /highestSalaries:
+    get:
+      description: Employee who are getting highest salaies within their respective
+        department.
+      responses: 
+        200:
+          body: 
+            application/json:
+              example: !include employee.sample
+              
+      
+
+  
       
     

@@ -1,4 +1,4 @@
-
+ 
   searchable:
     queryParameters: 
        query:
@@ -34,11 +34,3 @@
         required: false
         example: 80
         default: 10
-  hasNotFound:
-    responses: 
-      404:
-        body: 
-          application/json:
-              example: |
-                {"message":"<<resourcePathName|!singularize not found>>"}
-    
